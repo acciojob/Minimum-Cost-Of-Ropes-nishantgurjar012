@@ -1,24 +1,54 @@
 <!DOCTYPE html>
-
 <html>
-
 <head>
+  <title>Minimum Cost of Connecting Ropes</title>
 </head>
-
 <body>
-    <form id="form">
-        <label for="rope-lengths">Enter rope lengths:</label>
-        <input type="text" id="rope-lengths">
-        <button type="button" onclick="calculateMinCost()">Calculate</button>
-      </form>
-      <div id="result"></div>
 
-<script>
-    type="text/javascript" src="./script.js"
+  <input type="text" id="ropeLengths" placeholder="Enter comma-separated rope lengths">
+  <button onclick="calculateMinCost()">Calculate Minimum Cost</button>
 
+  <div id="result"></div>
+
+  <script>
+    function calculateMinCost() {
+      const ropeLengthsInput = document.getElementById('ropeLengths');
+      const ropeLengths = ropeLengthsInput.value.split(',').map(Number);
+
+      const minCost = findMinimumCost(ropeLengths);
+
+      const resultElement = document.getElementById('result');
+      resultElement.textContent = `Minimum cost of connecting ropes: ${minCost}`;
+    }
+
+    function findMinimumCost(ropeLengths) {
+      if (ropeLengths.length === 0) {
+        return 0;
+      }
+
+      // Use a priority queue (min heap) to efficiently find the minimum ropes to connect
+      const priorityQueue = [];
+      ropeLengths.forEach(length => {
+        priorityQueue.push(length);
+      });
+
+      // Build the connected rope with minimum cost
+      let totalCost = 0;
+      while (priorityQueue.length > 1) {
+        const firstRope = priorityQueue.shift(); // Get the smallest rope
+        const secondRope = priorityQueue.shift(); // Get the second smallest rope
+
+        const combinedRopeLength = firstRope + secondRope;
+        totalCost += combinedRopeLength;
+
+        // Add the combined rope back to the priority queue
+        priorityQueue.push(combinedRopeLength);
+        priorityQueue.sort((a, b) => a - b); // Re-sort the priority queue (min heap)
+      }
+
+      return totalCost;
+    }
   </script>
-  
 
 </body>
-
 </html>
